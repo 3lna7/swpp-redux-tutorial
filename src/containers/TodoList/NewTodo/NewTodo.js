@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 
 import { Redirect } from 'react-router-dom';
 
+import { connect } from 'react-redux';
+import * as actionTypes from '../../../store/action/actionType';
+
 import './NewTodo.css';
 
 class NewTodo extends Component {
@@ -12,8 +15,11 @@ class NewTodo extends Component {
   }
 
   postTodoHandler = () => {
-    const data = { title: this.state.title, content: this.state.content };
-    alert('Submitted\n' + data.title + '\n' + data.content);
+    //modofied
+    //lets remember that this.state is not a state from redux store but a state from the component todo
+    this.props.onStoreTodo(this.state.title, this.state.content);
+    //const data = { title: this.state.title, content: this.state.content };
+    //alert('Submitted\n' + data.title + '\n' + data.content);
     this.setState({ submitted: true });
   }
 
@@ -38,4 +44,14 @@ class NewTodo extends Component {
   }
 }
 
-export default NewTodo;
+const mapDispatchToProps = dispatch => {
+  return{
+    onStoreTodo: (title, content) => {
+      dispatch({type: actionTypes.ADD_TODO, title: title, content: content})
+    }
+  }
+};
+//modified
+//connect function returns another function so that's why we add two ()
+//for the second () we should add the component to be connected
+export default connect(null,mapDispatchToProps)(NewTodo);
